@@ -36,7 +36,7 @@ public class Console {
 		System.out.println();
 		System.out.println("Unfortunately we don't sell our flowers in arbitrary amounts any more.");
 		System.out.println("We now sell our flowers in bundles and the price will depend on the bundle.");
-		System.out.println("⚠️ WARNING: If the amount you ask is not splittable in existing bundeles, we will not be able to satisfy your request️.");
+		System.out.println("⚠️ WARNING: If the amount you ask is not splittable in existing bundles, we will not be able to satisfy your request️.");
 		System.out.println();
 		System.out.println();
 		System.out.println("Here's an inventory of our current products and the available bundles.");
