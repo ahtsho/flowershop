@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SubOrder {
-	private double subtotal;
+	private double subtotal = 0;
 	// code is a "cached" representation of the codes in the Items to speed up queries
 	private String code;
 	private List<Item> items;
@@ -37,12 +37,12 @@ public class SubOrder {
 	}
 	
 	public double computeTotal() {
-		
+		if(this.subtotal==0) {
 			this.subtotal = this.items
 					.stream()
 					.map(item -> item.getPrice() * item.getAmount())
 					.reduce(Double::sum).get();
-		
+		}
 		return subtotal;
 	}
 
