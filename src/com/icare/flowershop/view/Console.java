@@ -1,11 +1,12 @@
 package com.icare.flowershop.view;
 
 import java.text.DecimalFormat;
-import java.util.Map;
+import java.util.List;
 
 import com.icare.flowershop.business.Shop;
 import com.icare.flowershop.model.order.FailedSubOrder;
 import com.icare.flowershop.model.order.Order;
+import com.icare.flowershop.model.order.PurchaseRequest;
 import com.icare.flowershop.model.order.SubOrder;
 import com.icare.flowershop.model.product.PricedBundle;
 import com.icare.flowershop.model.product.Product;
@@ -87,21 +88,23 @@ public class Console {
 		System.out.println("and place them by pressing Enter twice.");
 		System.out.println();
 	};
-	public static void displayBundleBreakdownForEachProduct(Map<String, Integer> userOrders, Order bundledOrder) {
+	public static void displayBundleBreakdownForEachProduct(List<PurchaseRequest> orderRequests, Order bundledOrder) {
 		DecimalFormat numformat = new DecimalFormat("#.##");
 		numformat.setMinimumFractionDigits(2);
 		System.out.println("-------------------------------");
-		for (Map.Entry<String, Integer> order : userOrders.entrySet()) {
-			SubOrder suborder = bundledOrder.getSuborderByItemCode(order.getKey());
+		//for (PurchaseRequest order : userOrders) {
+		for(int i = 0; i < orderRequests.size(); i++) {
+			SubOrder suborder = bundledOrder.getSuborders().get(i);
 			String subtotalOrError = "";
 			if(suborder.getSubtotal() > 0) {
 				subtotalOrError = "$"+numformat.format(suborder.getSubtotal()); 
 			} else {
 				subtotalOrError = FailedSubOrder.FAILURE_MESSAGE;
 			}
-			System.out.println(order.getValue() + " " + order.getKey() + " " + subtotalOrError);
+			System.out.println(orderRequests.get(i).getAmount() + " " + orderRequests.get(i).getCode() + " " + subtotalOrError);
 			suborder.getItems()
 					.stream()
+					.filter(item -> item.getAmount() > 0)
 					.forEach(item -> System.out
 							.println("	" + item.getAmount() + " x " + item.getBundle() + " $" + item.getPrice()));
 		}
@@ -125,5 +128,4 @@ public class Console {
 	public static void displayNoPurchaseObservation() {
 		System.out.println("Ops, we've notices that you haven't placed an order, please make sure to read the instructions.");
 	}
-	
 }

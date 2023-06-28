@@ -1,8 +1,9 @@
 package test.com.icare.flowershop.business;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.fail;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.AfterEach;
@@ -11,6 +12,8 @@ import org.junit.jupiter.api.Test;
 
 import com.icare.flowershop.business.ProductSupplier;
 import com.icare.flowershop.business.Shop;
+import com.icare.flowershop.model.order.Order;
+import com.icare.flowershop.model.order.PurchaseRequest;
 import com.icare.flowershop.model.product.Flower;
 import com.icare.flowershop.model.product.PricedBundle;
 
@@ -43,6 +46,25 @@ class ShopTest {
 		assertSame(revOrderedBundles.get(0).getBundle(),9);
 		assertSame(revOrderedBundles.get(1).getBundle(),6);
 		assertSame(revOrderedBundles.get(2).getBundle(),3);
+	}
+	
+	@Test
+	void testbundleSellSameProduct() {
+		List<PurchaseRequest> orders = new ArrayList<PurchaseRequest>();
+		orders.add(new PurchaseRequest(10,"R12"));
+		orders.add(new PurchaseRequest(9,"R12"));
+		orders.add(new PurchaseRequest(8,"R12"));
+		orders.add(new PurchaseRequest(7,"R12"));
+		orders.add(new PurchaseRequest(6,"R12"));
+		orders.add(new PurchaseRequest(5,"R12"));
+		Order placedOrder = shop.bundleSell(orders);
+		assertEquals(placedOrder.getSuborders().get(0).computeTotal(),12.99,0);
+		assertEquals(placedOrder.getSuborders().get(1).computeTotal(),-1,0);
+		assertEquals(placedOrder.getSuborders().get(2).computeTotal(),-1,0);
+		assertEquals(placedOrder.getSuborders().get(3).computeTotal(),-1,0);
+		assertEquals(placedOrder.getSuborders().get(4).computeTotal(),-1,0);
+		assertEquals(placedOrder.getSuborders().get(5).computeTotal(),6.99,0);
+		
 	}
 
 	

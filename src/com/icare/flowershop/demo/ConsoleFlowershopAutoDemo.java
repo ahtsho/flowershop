@@ -1,11 +1,12 @@
 package com.icare.flowershop.demo;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.icare.flowershop.business.ProductSupplier;
 import com.icare.flowershop.business.Shop;
 import com.icare.flowershop.model.order.Order;
+import com.icare.flowershop.model.order.PurchaseRequest;
 import com.icare.flowershop.view.Console;
 
 public class ConsoleFlowershopAutoDemo {
@@ -28,10 +29,11 @@ public class ConsoleFlowershopAutoDemo {
 	 * 	1 x 3 $5.95
 	 */
 	public static void runWithCodingTestSampleInput() {
-		Map<String, Integer> orderRequest = new HashMap<String, Integer>();
-		orderRequest.put("R12", 10);
-		orderRequest.put("L09", 15);
-		orderRequest.put("T58", 13);
+		List<PurchaseRequest> orderRequest = new ArrayList<PurchaseRequest>();
+		
+		orderRequest.add(new PurchaseRequest(10, "R12"));
+		orderRequest.add(new PurchaseRequest(15,"L09"));
+		orderRequest.add(new PurchaseRequest(13,"T58"));
 
 		Shop shop = new Shop(ProductSupplier.generateDemoProducts());
 		Order bundledOrder = shop.bundleSell(orderRequest);

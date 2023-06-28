@@ -1,19 +1,13 @@
 package com.icare.flowershop.controller;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.icare.flowershop.model.order.PurchaseRequest;
 
 public class InputParser {
 
-	public static Map<String, Integer> parse(String userInput) throws NumberFormatException {
+	public static PurchaseRequest parse(String userInput) throws NumberFormatException {
 
-		return new HashMap<String, Integer>() {
-			private static final long serialVersionUID = 1L;
-
-			{
-				put(userInput.split(" ")[1], Integer.parseInt(userInput.split(" ")[0]));
-			}
-		};
+		return new PurchaseRequest(Integer.parseInt(userInput.split(" ")[0]),userInput.split(" ")[1]);
+		
 	}
 
 }

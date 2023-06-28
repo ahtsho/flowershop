@@ -74,3 +74,27 @@ It should either give you the total of each line and it's breakdown into items o
     -------------------------------
     1 R12 BUNDLE IS NOT AVAILABLE!
     -------------------------------
+
+
+Here's an example of complex positive reponses
+
+
+    10 R12
+    8 R12
+    6 R12
+    5 R12
+
+    Thank you for your order!
+    Here's the cost and bundle breakdown for each product.
+    
+    -------------------------------
+    10 R12 $12.99
+       1 x 10 $12.99
+    8 R12 BUNDLE IS NOT AVAILABLE!
+    6 R12 BUNDLE IS NOT AVAILABLE!
+    5 R12 $6.99
+       1 x 5 $6.99
+    -------------------------------
+    
+    Goodbye! See you next time!🌸 
+

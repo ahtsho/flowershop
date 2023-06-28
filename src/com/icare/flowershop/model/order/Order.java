@@ -33,13 +33,11 @@ public class Order {
 
 	// replace return type with Optional<Double> 
 	public double computeTotal() {
-		if(!this.suborders.isEmpty()) {
 			this.total = this.suborders
 					.stream()
 					.map(sub -> sub.getSubtotal())
 					.reduce(Double::sum)
 					.get();
-		}
 		return this.total;
 	}
 
