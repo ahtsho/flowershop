@@ -1,19 +1,20 @@
-package com.icare.flowershop.product;
+package com.icare.flowershop.model.product;
 
 import java.util.List;
 
-public class Flower implements Product{
+public class Flower implements Product {
 
 	private String name;
 	private String code;
-	private List<PricedBundle> bundels;
-	
+	private List<PricedBundle> bundles;
+
 	public Flower(String name, String code, List<PricedBundle> bundles) {
 		this.name = name;
 		this.code = code;
-		this.setBundels(bundles);
+		this.bundles = bundles;
 	}
 
+	@Override
 	public String getName() {
 		return name;
 	}
@@ -21,7 +22,7 @@ public class Flower implements Product{
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 	@Override
 	public String getCode() {
 		return code;
@@ -34,13 +35,12 @@ public class Flower implements Product{
 
 	@Override
 	public List<PricedBundle> getBundels() {
-		return bundels;
+		return bundles;
 	}
-	
+
 	@Override
 	public void setBundels(List<PricedBundle> bundels) {
-		this.bundels = bundels;
+		this.bundles = bundels;
 	}
-	
-	
+
 }

@@ -1,9 +1,9 @@
-package com.icare.flowershop.product;
+package com.icare.flowershop.model.product;
 
 public class PricedBundle {
 	
 	private int bundle;
-	private double price;
+	private double price;	
 	
 	public PricedBundle(int bundle, double price) {
 		super();
@@ -26,6 +26,12 @@ public class PricedBundle {
 
 	public void setPrice(double price) {
 		this.price = price;
+	}
+
+
+	@Override
+	public String toString() {
+		return bundle +" @ $"+ price;
 	}
 
 

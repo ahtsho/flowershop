@@ -1,4 +1,4 @@
-package com.icare.flowershop.order;
+package com.icare.flowershop.model.order;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +11,9 @@ public class SubOrder {
 
 	public SubOrder(List<Item> items) {
 		this.items = items;
-		this.setCode(this.items.get(0).getCode());
+		if(this.items.size() > 0) {
+			this.setCode(this.items.get(0).getCode());
+		}
 		this.computeTotal();
 	}
 
@@ -35,12 +37,12 @@ public class SubOrder {
 	}
 	
 	public double computeTotal() {
-		if(this.subtotal==0) {
+		
 			this.subtotal = this.items
 					.stream()
-					.map(item -> item.getPrice())
+					.map(item -> item.getPrice() * item.getAmount())
 					.reduce(Double::sum).get();
-		}
+		
 		return subtotal;
 	}
 

@@ -1,4 +1,4 @@
-package com.icare.flowershop;
+package com.icare.flowershop.business;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -6,11 +6,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import com.icare.flowershop.order.Item;
-import com.icare.flowershop.order.Order;
-import com.icare.flowershop.order.SubOrder;
-import com.icare.flowershop.product.PricedBundle;
-import com.icare.flowershop.product.Product;
+import com.icare.flowershop.error.NoSuchBundleException;
+import com.icare.flowershop.model.order.FailedSubOrder;
+import com.icare.flowershop.model.order.Item;
+import com.icare.flowershop.model.order.Order;
+import com.icare.flowershop.model.order.SubOrder;
+import com.icare.flowershop.model.product.PricedBundle;
+import com.icare.flowershop.model.product.Product;
 
 public class Shop {
 
@@ -25,13 +27,19 @@ public class Shop {
 		Order bundledOrder = new Order(new ArrayList<SubOrder>());
 		for (Map.Entry<String, Integer> order : orders.entrySet()) {
 			
-			List<Item> bundledItems = this.createBundledItems(order.getValue(), this.getProductByCode(order.getKey()));
-			bundledOrder.addSuborder(new SubOrder(bundledItems));
+			List<Item> bundledItems;
+			try {
+				bundledItems = this.createBundledItems(order.getValue(), this.getProductByCode(order.getKey()));
+				bundledOrder.addSuborder(new SubOrder(bundledItems));
+			} catch (NoSuchBundleException e) {
+				bundledOrder.addSuborder(new FailedSubOrder(order.getValue(),order.getKey()));
+			}
+			
 		}
 		return bundledOrder;
 	}
 
-	private List<Item>  createBundledItems(int amount, Product product) {
+	private List<Item>  createBundledItems(int amount, Product product) throws NoSuchBundleException {
 		List<PricedBundle> descSortedBundles = this.getReverseSortedBundles(product.getBundels());
 		List<Item> bundledItems = new ArrayList<Item>(); 
 		int minRow = this.calculateMinBundlesConfig(amount, product,descSortedBundles);
@@ -41,25 +49,6 @@ public class Shop {
 		for(BundlingMatrixCell cell: minialConfig) {
 			bundledItems.add(new Item(cell.quotient,product.getCode(),cell.bundle,cell.price));
 		}
-		/*for(int i = start; i < descSortedBundles.size(); i++) {
-			PricedBundle bundle = descSortedBundles.get(i);
-			if(amount < bundle.getBundle()) continue;
-			
-			segment = amount / bundle.getBundle();
-			
-			if(segment >= 1) {
-				bundledItems.add(new Item(segment,product.getCode(),bundle.getBundle(),bundle.getPrice()));
-				amount -=  segment * bundle.getBundle();
-				
-				if(amount == 0) break;
-				
-			} else {
-				bundledItems.add(new Item(amount,product.getCode(),bundle.getBundle(),bundle.getPrice()));
-				break;
-			}
-		}
-		if(amount != 0) bundledItems.clear(); // unsuccessful bundling
-		*/ 
 		
 		return bundledItems;
 	}
@@ -82,9 +71,12 @@ public class Shop {
 	 *     
 	 *     where 
 	 *     amount = 15
-	 *     sorted bundles are 9,6,3   
+	 *     sorted bundles are 9,6,3 
+	 *       
 	 */
-	private int calculateMinBundlesConfig(int amount, Product product, List<PricedBundle> descSortedBundles) {
+	private int calculateMinBundlesConfig(int amount, Product product, List<PricedBundle> descSortedBundles) throws NoSuchBundleException {
+		if (amount == 0) throw new NoSuchBundleException(amount + " "+ product.getCode());
+
 		bundlingMtx = new ArrayList<>();
 		
 		int minNumberOfBundles = Integer.MAX_VALUE;
@@ -113,7 +105,7 @@ public class Shop {
 			
 		}
 		if(winningRow==-1) {
-			throw new Error("No bundling solution found for requested amount");
+			throw new NoSuchBundleException(amount + " "+ product.getCode());
 		}
 		return winningRow;
 	}
@@ -140,17 +132,16 @@ public class Shop {
 	}
 	
 	private class BundlingMatrixCell {
-		@Override
-		public String toString() {
-			return "("+ row + ","+ col + ") " + amount +"/"+bundle+"="+ quotient + " +"+ remainder +", p=" + price + "";
-		}
-		int row, col, amount, quotient, remainder, bundle;
+		int row, amount, quotient, remainder, bundle;
 		double price;
 		public BundlingMatrixCell(int row, int col) {
 			this.row = row;
-			this.col = col;
 		}
 		
+	}
+
+	public List<Product> getAllProducts() {
+		return this.products;
 	}
 
 }

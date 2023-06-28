@@ -1,4 +1,4 @@
-package com.icare.flowershop.order;
+package com.icare.flowershop.model.order;
 
 import java.util.List;
 

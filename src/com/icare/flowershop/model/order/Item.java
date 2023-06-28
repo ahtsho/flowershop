@@ -1,4 +1,4 @@
-package com.icare.flowershop.order;
+package com.icare.flowershop.model.order;
 
 public class Item {
 	private int amount;
